@@ -1,29 +1,50 @@
 package main
 
 import (
-	"github.com/kataras/iris/v12"
+	"goland/controller/weights"
+
 	"goland/service"
+
+	"github.com/iris-contrib/middleware/cors"
+	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/accesslog"
 	"github.com/kataras/iris/v12/middleware/recover"
-	"fmt"
+	"github.com/kataras/iris/v12/mvc"
+	// "log"
+	// "fmt"
+	// "os"
 )
 
 func main() {
-		
-		
-    app := iris.New()
-		 // ログ記録（これも備え付きミドルウェア）
-		 ac := accesslog.File("./log/access.log")
-		 defer ac.Close()
-		 app.UseRouter(ac.Handler)
-		 app.UseRouter(recover.New())
+	app := iris.New()
+	// ログ記録（これも備え付きミドルウェア）
+	ac := accesslog.File("./access.log")
+	defer ac.Close()
 
-		fmt.Println(service.InitDb())
-		// return
+	// cors対応
+	crs := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+	})
+	app.UseRouter(crs)
 
-    app.Handle("GET", "/", func(ctx iris.Context) {
-        ctx.JSON(iris.Map{"message": "ping"})
-    })
-	
-    app.Listen(":8080")
+	app.UseRouter(ac.Handler)
+	app.UseRouter(recover.New())
+
+	service.InitDb()
+
+	weightsAPI := app.Party("/weights")
+	mw := mvc.New(weightsAPI)
+	mw.Handle(new(weights.WeightController))
+
+	// weights := app.Party("/weights")
+	// mvc.Configure(weights, setups.ConfigureWeightsControllers)
+	// ポートの指定
+	app.Listen(":8080")
+
+	// app.Handle("GET", "/", func(ctx iris.Context) {
+	//     ctx.JSON(iris.Map{"message": "ping"})
+	// })
+
+	// app.Listen(":8080")
 }

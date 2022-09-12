@@ -1,8 +1,10 @@
 export type WeightType = {
   id: number
   weight: string
-  day: string
+  registDay: string
   meet?: number | null
   sports?: number | null
-  memo?: string
+  memo?: string | null
+  updatedAt?: string | null
+  createdAt?: string
 }

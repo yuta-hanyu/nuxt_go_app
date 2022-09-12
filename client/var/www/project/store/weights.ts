@@ -27,20 +27,22 @@ export default class weights extends VuexModule {
   @Action({})
   async fetchWeights() {
     const response = await $axios.$get('/weightMocks')
-    this.setWeights(response.weights)
-    this.setTargetWeight(response.targetWeight)
+    console.warn(await $axios.$get('http://localhost:8080/weights'))
+    const res = await $axios.$get('http://localhost:8080/weights')
+    this.setWeights(res)
+    this.setTargetWeight(70)
   }
 
   @Action({})
   async addWeight(payload: WeightType) {
     //TODO オートインクリメントのためバックエンドできたら削除
-    const idAarray: number[] = []
-    this.weights.map((obj) => {
-      idAarray.push(obj.id)
-    })
-    payload.id = Math.max(...idAarray) + 1
+    // const idAarray: number[] = []
+    // this.weights.map((obj) => {
+    //   idAarray.push(obj.id)
+    // })
+    // payload.id = Math.max(...idAarray) + 1
     /////////////////////
-    await $axios.$post('/weightMocks', payload)
+    await $axios.$post('http://localhost:8080/weight', payload)
     this.fetchWeights()
   }
 

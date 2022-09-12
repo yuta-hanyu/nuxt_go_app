@@ -1,10 +1,10 @@
 package config
 
 import (
-	// "goland/utils"
 	"log"
 	"os"
 	"github.com/joho/godotenv"
+	"goland/utils"
 )
 
 type ConfigList struct {
@@ -21,7 +21,7 @@ var Config ConfigList
 
 func init() {
 	LoadConfig()
-	// utils.LoggingSettings(Config.LogFile)
+	utils.LoggingSettings(os.Getenv("ERROR_LOG"))
 }
 
 func LoadConfig() {
@@ -33,15 +33,9 @@ func LoadConfig() {
 	Config = ConfigList {
 		DbUserName: os.Getenv("DB_USER"),
 		DbPassWord: os.Getenv("DB_PASSWORD"),
-		DbHost: os.Getenv("DB_HOST"),
+		DbHost: os.Getenv("DB_HOSTS"),
 		DbPort: os.Getenv("DB_PORT"),
 		DbName: os.Getenv("DB_NAME"),
 		LogFile: os.Getenv("ERROR_LOG"),
-
-		// Port: cfg.Section("web").Key("port").MustString("8080"),
-		// SQLDriver: cfg.Section("db").Key("driver").String(),
-		// DB_NAMA: cfg.Section("db").Key("name").String(),
-		// LogFile: cfg.Section("web").Key("logfile").String(),
-		// Static: cfg.Section("web").Key("static").String(),
 	}
 }

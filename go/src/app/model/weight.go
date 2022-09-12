@@ -1,16 +1,18 @@
 package model
 
 import (
-	"time"
+	// "github.com/go-sql-driver/mysql"
+	"gopkg.in/guregu/null.v3"
+	// "gopkg.in/guregu/null.v3/zero"
 )
 
 type Weight struct {
-	Id    int  `json:"id" db:"id", primarykey, autoincrement`
-	Weight  string  `json:"weight" db:"weight", notnull, size:16`
-	Day   time.Time  `json:"day"  db:"day"`
-	Meet   int  `json:"meet"  db:"meet"`
-	Sports   int  `json:"sports"  db:"sports"`
-	Memo   string  `json:"memo"  db:"memo"`
-	CreatedAt   time.Time  `json:"created_at"  db:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"  db:"updated_at"`
+	Id        int         `json:"id" db:"id"`
+	Weight    string      `json:"weight" db:"weight"`
+	RegistDay null.Time   `json:"regist_day" db:"regist_day"`
+	Meet      null.Int    `json:"meet" db:"meet"`
+	Sports    null.Int    `json:"sports" db:"sports"`
+	Memo      null.String `json:"memo" db:"memo"`
+	UpdatedAt null.Time   `json:"updated_at" db:"updated_at"`
+	CreatedAt null.Time   `json:"created_at" db:"created_at"`
 }
