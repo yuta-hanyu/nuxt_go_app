@@ -127,7 +127,7 @@ export default class DetailWeight extends Vue {
    * 対象データの日付を整形
    */
   get dispDay(): string {
-    const day = new Date(this.weight!.day)
+    const day = new Date(this.weight!.registDay)
     const year = day.getFullYear()
     const month = day.getMonth() + 1
     const date = day.getDate()

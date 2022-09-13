@@ -5,6 +5,8 @@ import (
 
 	"goland/service"
 
+	"goland/setups"
+
 	"github.com/iris-contrib/middleware/cors"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/middleware/accesslog"
@@ -17,6 +19,11 @@ import (
 
 func main() {
 	app := iris.New()
+
+	// ミドルウェアの使用
+	app.Use(iris.Compression)
+	app.Configure(iris.WithoutBodyConsumptionOnUnmarshal)
+
 	// ログ記録（これも備え付きミドルウェア）
 	ac := accesslog.File("./access.log")
 	defer ac.Close()
@@ -37,8 +44,7 @@ func main() {
 	mw := mvc.New(weightsAPI)
 	mw.Handle(new(weights.WeightController))
 
-	// weights := app.Party("/weights")
-	// mvc.Configure(weights, setups.ConfigureWeightsControllers)
+	mvc.Configure(weightsAPI, setups.ConfigureWeightsControllers)
 	// ポートの指定
 	app.Listen(":8080")
 

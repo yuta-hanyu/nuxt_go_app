@@ -221,7 +221,7 @@ export default class index extends Vue {
       let pushMeet: null | string = null
 
       this.getWeight.map((obj: WeightType) => {
-        const dayData = new Date(obj.day)
+        const dayData = new Date(obj.registDay)
         const dayMonth = dayData.getMonth() + 1
         const dayDay = dayData.getDate()
         if (`${dayMonth}/${dayDay}` === `${month}/${day}`) {

@@ -1,43 +1,78 @@
 package weights
 
 import (
-	// "github.com/kataras/iris/v12"
 	"goland/model"
-	// "github.com/kataras/iris/v12/mvc"
+
 	"goland/service"
-	"log"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/mvc"
 )
 
 type WeightController struct {
-	// WeightServices service.WeightService
-	// Ctx iris.Context
+	WeightServices service.WeightService
+	Ctx            iris.Context
 }
 
 /*
 * 体重一覧取得
 * GET: http://localhost:8080/books
  */
-func (c *WeightController) Get() ([]model.Weight, error) {
-	dbMap := service.InitDb()
-	defer dbMap.Db.Close()
+func (c *WeightController) Get() mvc.Response {
 
-	var weights []model.Weight
-	// ユーザーを全取得
-	_, err := dbMap.Select(&weights, `SELECT * FROM weights`)
+	weights, err := c.WeightServices.GetWeightList()
 	if err != nil {
-		return []model.Weight{}, err
+		return mvc.Response{
+			Code: iris.StatusInternalServerError, // エラーハンドリング
+		}
 	}
 
-	log.Println(weights)
-
-	return weights, err
+	// Iris に備え付きのレスポンス用構造体（struct）
+	return mvc.Response{
+		Code:   iris.StatusOK,
+		Object: weights,
+	}
 }
 
-// // POST: http://localhost:8080/books
-// func (c *BookController) Post(b Book) int {
-// 	println("Received Book: " + b.Title)
+/*
+* 体重登録
+* POST: http://localhost:8080/books
+ */
+func (c *WeightController) Post() mvc.Response {
+	// リクエストボディのjsonデータを構造体（struct）に格納する
+	var weight model.Weight
+	err := c.Ctx.ReadJSON(&weight)
 
-// 	return iris.StatusCreated
-// }
+	// エラーハンドリング（Iris 備え付きのもので作れます）
+	if err != nil {
+		c.Ctx.StopWithError(iris.StatusBadRequest, err)
+		return mvc.Response{
+			Code: iris.StatusBadRequest,
+		}
+	}
+
+	// 新規作成
+	err = c.WeightServices.CreateWeight(&weight)
+	if err != nil {
+		return mvc.Response{
+			Code: iris.StatusInternalServerError, // エラーハンドリング
+		}
+	}
+
+	// Iris 備え付きのレスポンス用構造体（struct）
+	return mvc.Response{Code: iris.StatusCreated}
+	// // 新規作成
+	// cmd := `insert into weights (
+	// 	weight,
+	// 	regist_day,
+	// 	meet,
+	// 	sports,
+	// 	memo) value (?, ?, ?, ?, ?)`
+	// _, err = dbMap.Db.Exec(cmd, w.Weight, w.RegistDay, w.Meet, w.Sports, w.Memo)
+	// if err != nil {
+	// 	return mvc.Response{
+	// 		Code: iris.StatusInternalServerError, // エラーハンドリング
+	// 	}
+	// }
+}

@@ -1,18 +1,13 @@
 package service
 
 import (
-	// "goland/_example-mvc-api/model"
-	// "fmt"
 	"goland/model"
-	"log"
 	// "github.com/go-sql-driver/mysql"
 )
 
 type WeightService struct{}
 
 func (WeightService) GetWeightList() ([]model.Weight, error) {
-	log.Println(2222)
-
 	// initialize the DbMap
 	dbMap := InitDb()
 	defer dbMap.Db.Close()
@@ -25,19 +20,7 @@ func (WeightService) GetWeightList() ([]model.Weight, error) {
 		return []model.Weight{}, err
 	}
 
-	// for weights {
-	// 	log.Println(weights)
-	// 	// var s mysql.NullTime
-	// 	// err := weights.Scan(&s)
-	// 	// errチェックをすること
-	// 	// if s.Valid {
-	// 	// 	// s.String を使う
-	// 	// } else {
-	// 	// 	// NULL値
-	// 	// }
-	// }
-
-	return weights, nil
+	return weights, err
 }
 
 func (WeightService) CreateWeight(weight *model.Weight) error {

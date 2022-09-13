@@ -11,7 +11,7 @@
         <tr>
           <td class="text-h6 pr-0">　- 前回</td>
           <td class="text-h6 text-center font-weight-black pl-0">
-            {{ getPreData.weight }} kg（{{ getPreData.day }}）
+            {{ getPreData.weight }} kg（{{ getPreData.registDay }}）
           </td>
         </tr>
         <tr>
@@ -106,12 +106,12 @@ export default class WeightDatailTable extends Vue {
     //配列を日付の降順にソート
     let sortWeight = JSON.parse(JSON.stringify(weightsStore.getAllWeights)) //ディープコピー
     sortWeight = sortWeight.sort((a: WeightType, b: WeightType) => {
-      return a.day > b.day ? -1 : 1 //オブジェクトソート
+      return a.registDay > b.registDay ? -1 : 1 //オブジェクトソート
     })
     //前回日付となるデータのみを取得
     let result = null
     for (let i = 0; i < sortWeight.length; ++i) {
-      if (this.targetData!.day > sortWeight[i].day && !result) {
+      if (this.targetData!.registDay > sortWeight[i].day && !result) {
         result = sortWeight[i]
       }
     }

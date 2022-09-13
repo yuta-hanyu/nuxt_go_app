@@ -10,14 +10,18 @@
             <v-col cols="6" class="my-auto">
               <div class="text-caption">
                 前回
-                <span v-if="getWeight.length > 0">{{ getPreData.day }}</span>
+                <span v-if="getWeight.length > 0">{{
+                  $moment(getPreData.registDay).format('M月D日')
+                }}</span>
               </div>
               <div class="text-h6">
                 <span v-if="getWeight.length > 0">{{ getPreData.weight }}</span> kg
               </div>
             </v-col>
             <v-col cols="6">
-              <div class="text-subtitle-1">{{ dispWeight }}</div>
+              <div class="text-subtitle-1">
+                {{ $moment(newWeight.registDay).format('YYYY年M月D日') }}
+              </div>
               <div class="text-h4 font-weight-black">
                 {{ newWeight.weight }}
                 <span class="subtitle-1 font-weight-black">kg</span>
@@ -104,9 +108,9 @@ export default class index extends Vue {
   newWeight: WeightType = {
     id: 0,
     weight: '',
-    day: this.$getDayISOString(),
-    meet: 3,
-    sports: 3,
+    registDay: this.$moment().toISOString(),
+    meet: 0,
+    sports: 0,
     memo: '',
   }
 
@@ -125,7 +129,7 @@ export default class index extends Vue {
       this.newWeight = {
         id: 0,
         weight: '',
-        day: this.$getDayISOString(''),
+        registDay: this.$moment().toISOString(),
         meet: 3,
         sports: 3,
         memo: '',
@@ -150,7 +154,7 @@ export default class index extends Vue {
    */
   openday() {
     this.datePickerDialog = !this.datePickerDialog
-    const today = this.$getDayISOString() // 今日の日付をdatepickerにセット
+    const today = this.$moment().toISOString() // 今日の日付をdatepickerにセット
     this.$refs.datePickerRef.setdate(today)
   }
 
@@ -158,7 +162,7 @@ export default class index extends Vue {
    * 選択した日付をnewWeightにセット
    */
   setday(day: string): void {
-    this.newWeight.day = day
+    this.newWeight.registDay = day
     this.datePickerDialog = !this.datePickerDialog
   }
 
@@ -171,23 +175,15 @@ export default class index extends Vue {
   }
 
   /**
-   * 表示用日付時刻取得
-   */
-  get dispWeight(): string {
-    return this.newWeight.day.replace(/-/g, '/')
-  }
-
-  /**
    * 前回データを取得
    */
   get getPreData(): WeightType {
-    let result = JSON.parse(JSON.stringify(this.getWeight)) //ディープコピー
-    result = result.sort((a: WeightType, b: WeightType) => {
-      return a.day > b.day ? -1 : 1 //オブジェクトソート
+    let copyWeights = this.getWeight.map((list) => ({ ...list })) //ディープコピー
+    //オブジェクトソートを降順にソート
+    copyWeights = copyWeights.sort((a: WeightType, b: WeightType) => {
+      return a.registDay > b.registDay ? -1 : 1
     })
-    result = result.shift()
-    result.day = result.day.replace(/-/g, '/')
-    return result
+    return copyWeights[0]
   }
 }
 </script>

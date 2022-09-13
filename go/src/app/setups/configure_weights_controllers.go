@@ -1,10 +1,10 @@
 package setups
 
 import (
+	"goland/controller/weights"
+
 	"github.com/kataras/iris/v12/middleware/accesslog"
 	"github.com/kataras/iris/v12/mvc"
-	"goland/controller/weights"
-	// "log"
 )
 
 // ConfigureUsersControllers
@@ -16,5 +16,5 @@ func ConfigureWeightsControllers(app *mvc.Application) {
 	app.Register(accesslog.GetFields)
 	// URLが "/users" から始まるリクエストを受け取った際に，
 	// 以下の Controllerを使用させるという指示
-	app.Handle(new(weights.WeightsController))
+	app.Handle(new(weights.WeightController))
 }

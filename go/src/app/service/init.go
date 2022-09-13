@@ -3,9 +3,12 @@ package service
 import (
 	"database/sql"
 	"fmt"
-	"github.com/go-gorp/gorp"
 	"goland/config"
 	"goland/migration"
+	"goland/model"
+
+	"github.com/go-gorp/gorp"
+
 	// "goland/model"
 	"log"
 	"os"
@@ -36,7 +39,7 @@ func InitDb() *gorp.DbMap {
 
 	dbmap := &gorp.DbMap{Db: Db, Dialect: gorp.MySQLDialect{"InnoDB", "UTF8"}}
 
-	// dbmap.AddTableWithName(model.Weight{}, "weight").SetKeys(true, "Id")
+	dbmap.AddTableWithName(model.Weight{}, "weights").SetKeys(true, "Id")
 	// err = dbmap.CreateTablesIfNotExists()
 	// if err != nil {
 	// 	fmt.Printf("error! can't craete table: %v", err)

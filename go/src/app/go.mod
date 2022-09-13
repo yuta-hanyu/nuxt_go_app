@@ -7,7 +7,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/iris-contrib/middleware/cors v0.0.0-20220815101939-754509eb4d57
 	github.com/joho/godotenv v1.4.0
-	github.com/kataras/iris/v12 v12.2.0-beta4.0.20220905135828-b037d11c1886
+	github.com/kataras/iris/v12 v12.2.0-beta4.0.20220909125623-9e8a58bf3bff
 	gopkg.in/guregu/null.v3 v3.5.0
 )
 

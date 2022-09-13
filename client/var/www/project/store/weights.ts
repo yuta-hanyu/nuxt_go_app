@@ -1,6 +1,7 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { WeightType } from '../types/weight'
 import { $axios } from '~/utils/api'
+import moment from 'moment'
 
 @Module({ stateFactory: true, namespaced: true, name: 'weights' })
 export default class weights extends VuexModule {
@@ -27,13 +28,12 @@ export default class weights extends VuexModule {
   @Action({})
   async fetchWeights() {
     const response = await $axios.$get('/weightMocks')
-    console.warn(await $axios.$get('http://localhost:8080/weights'))
-    const res = await $axios.$get('http://localhost:8080/weights')
+    const res = await $axios.$get('/weights')
     this.setWeights(res)
     this.setTargetWeight(70)
   }
 
-  @Action({})
+  @Action({ rawError: true })
   async addWeight(payload: WeightType) {
     //TODO オートインクリメントのためバックエンドできたら削除
     // const idAarray: number[] = []
@@ -42,7 +42,11 @@ export default class weights extends VuexModule {
     // })
     // payload.id = Math.max(...idAarray) + 1
     /////////////////////
-    await $axios.$post('http://localhost:8080/weight', payload)
+    payload.registDay = moment(payload.registDay).format()
+    payload.createdAt = moment(payload.registDay).format()
+    let res = await $axios.$post('/weights', payload)
+    console.warn(res)
+
     this.fetchWeights()
   }
 
